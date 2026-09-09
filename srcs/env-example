@@ -1,0 +1,17 @@
+# Domain Configuration
+DOMAIN_NAME=mohel-bo.42.fr
+
+# MariaDB Configuration
+DB_NAME=wordpress_db
+DB_USER=wp_user
+DB_PASS=db_user_secret_pass_42
+DB_ROOT_PASS=db_root_secret_pass_42
+
+# WordPress Configuration
+WP_TITLE=Inception
+WP_ADMIN_USER=wp_supervisor
+WP_ADMIN_PASS=super_secret_wp_pass_42
+WP_ADMIN_EMAIL=supervisor@mohel-bo.42.fr
+WP_USER=wp_editor
+WP_PASS=editor_secret_pass_42
+WP_EMAIL=editor@mohel-bo.42.fr

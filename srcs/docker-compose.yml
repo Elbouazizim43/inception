@@ -1,0 +1,77 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    build: ./requirements/nginx/
+    env_file: 
+      - .env
+    networks:
+      - inception
+    ports:
+      - "443:443"
+    restart: always
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    build: ./requirements/mariadb/
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -u$${DB_USER} -p$${DB_PASS}"]
+      interval: 10s
+      timeout: 10s
+      retries: 25
+      start_period: 20s
+
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    build: ./requirements/wordpress/
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: always
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pidof", "php-fpm83"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 10s
+
+networks:
+  inception:
+    name: inception
+
+volumes:
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mohel-bo/data/mariadb
+
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mohel-bo/data/wordpress  
