@@ -2,13 +2,11 @@
 
 set -e
 
-# Subject requirement: administrator username can't contain admin or Admin
 if echo "$WP_ADMIN_USER" | grep -qi "admin"; then
     echo "FATAL: WP_ADMIN_USER ('$WP_ADMIN_USER') cannot contain 'admin' or 'Admin' (Subject requirement)."
     exit 1
 fi
 
-# Ensure PHP-FPM listens on port 9000 for NGINX fastcgi proxy
 sed -i 's/listen = 127.0.0.1:9000/listen = 9000/1' /etc/php83/php-fpm.d/www.conf
 
 echo "Waiting for MariaDB connection..."
@@ -45,11 +43,9 @@ if ! wp core is-installed --allow-root 2>/dev/null; then
                     --skip-email \
                     --allow-root
 
-    # Ensure HTTPS URL is persisted in config
     wp config set WP_HOME "https://${DOMAIN_NAME}" --allow-root
     wp config set WP_SITEURL "https://${DOMAIN_NAME}" --allow-root
 
-    # Create second non-admin user
     if ! wp user get "$WP_USER" --allow-root >/dev/null 2>&1; then
         wp user create "$WP_USER" "$WP_EMAIL" --role=author --user_pass="$WP_PASS" --allow-root
     fi
