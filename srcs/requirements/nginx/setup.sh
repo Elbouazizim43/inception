@@ -2,7 +2,6 @@
 
 set -e
 
-# Always generate self-signed SSL certificate at runtime
 echo "Generating self-signed SSL certificate for ${DOMAIN_NAME:-mohel-bo.42.fr}..."
 mkdir -p /etc/ssl/certs /etc/ssl/private
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -12,7 +11,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 chmod 600 /etc/ssl/private/origin.key
 chmod 644 /etc/ssl/certs/origin.crt
 
-# Dynamically update server_name in nginx.conf
 sed -i "s/server_name .*/server_name ${DOMAIN_NAME:-mohel-bo.42.fr} www.${DOMAIN_NAME:-mohel-bo.42.fr};/g" /etc/nginx/nginx.conf
 
 echo "Starting NGINX..."

@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx
+    image: nginx:42
     container_name: nginx
     build: ./requirements/nginx/
     env_file: 
@@ -17,7 +17,7 @@ services:
         condition: service_healthy
 
   mariadb:
-    image: mariadb
+    image: mariadb:42
     container_name: mariadb
     build: ./requirements/mariadb/
     env_file:
@@ -35,7 +35,7 @@ services:
       start_period: 20s
 
   wordpress:
-    image: wordpress
+    image: wordpress:42
     container_name: wordpress
     build: ./requirements/wordpress/
     env_file:
